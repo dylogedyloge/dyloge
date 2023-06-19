@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { getAppProps } from "../../utils/getAppProps";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBrain } from "@fortawesome/free-solid-svg-icons";
+import { faBrain, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 export default function NewPost(props) {
   const router = useRouter();
@@ -48,9 +48,9 @@ export default function NewPost(props) {
             onSubmit={handleSubmit}
             className="card bg-base-100 shadow-xl p-10"
           >
-            <div className="mb-5">
-              <label className="label">
-                <span className="label-text text-lg font-semibold">
+            <div className="mb-5 ">
+              <label className="label grid place-content-center mb-4">
+                <span className="label-text text-md font-semibold">
                   Generate a blog post on the topic of:
                 </span>
               </label>
@@ -63,26 +63,14 @@ export default function NewPost(props) {
               />
             </div>
             <div className="mb-10">
-              <label className="label">
-                <span className="label-text text-lg font-semibold">
+              <label className="label grid place-content-center mb-4">
+                <span className="label-text text-md font-semibold ">
                   Targeting the following keywords:
                 </span>
               </label>
-              <div className="alert mb-1 ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="stroke-current shrink-0 h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span className="">Separate keywords with a comma</span>
+              <div className="alert mb-2 ">
+                <FontAwesomeIcon icon={faCircleInfo} />
+                <span className="text-sm">Separate keywords with a comma</span>
               </div>
               <textarea
                 placeholder="happines, self-steem, Anthony Robins"
@@ -91,13 +79,10 @@ export default function NewPost(props) {
                 onChange={(e) => setKeywords(e.target.value)}
                 maxLength={80}
               />
-              {/* <span className="label-text-alt text-md">
-                Separate keywords with a comma
-              </span> */}
             </div>
             <button
               type="submit"
-              className="btn btn-primary btn-block btn-xs sm:btn-sm md:btn-md lg:btn-lg"
+              className="btn btn-primary btn-block "
               disabled={!topic.trim() || !keywords.trim()}
             >
               Generate

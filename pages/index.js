@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { themeChange } from "theme-change";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useIntl } from "react-intl";
