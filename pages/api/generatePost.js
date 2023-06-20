@@ -56,7 +56,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       },
       {
         role: "user",
-        content: `Write a long and detailed SEO-friendly blog post about ${topic} in persian language, that targets the following comma-separated keywords: ${keywords}. 
+        content: `Write a long and detailed SEO-friendly blog post about ${topic} that targets the following comma-separated keywords: ${keywords}. 
       The response should be formatted in SEO-friendly HTML, 
       limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
       },
@@ -85,7 +85,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       },
       {
         role: "user",
-        content: "Generate appropriate title tag text for the above blog post",
+        content: "Generate appropriate title for the above blog post",
       },
     ],
     temperature: 0,

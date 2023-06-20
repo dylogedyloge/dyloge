@@ -2,15 +2,24 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import {
   faArrowLeft,
   faArrowRight,
+  faArrowRightFromBracket,
+  faCircleHalfStroke,
   faCoins,
+  faLanguage,
+  faMoon,
   faPlus,
+  faSun,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import PostsContext from "../../context/postsContext";
-// import { Logo } from "../Logo";
+import { useLocalStorage } from "usehooks-ts";
+import Flag from "react-world-flags";
+import { useIntl } from "react-intl";
+import { useRouter } from "next/router";
 
 export const AppLayout = ({
   children,
@@ -39,10 +48,23 @@ export const AppLayout = ({
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+  // Theme Change
+  const [theme, setTheme] = useLocalStorage();
+  const toggleTheme = () => {
+    setTheme(theme === "business" ? "corporate" : "business");
+  };
+  useEffect(() => {
+    const body = document.body;
+    body.setAttribute("data-theme", theme);
+  }, [theme]);
+  // i18n
+  const { locale, locales, push, asPath } = useRouter();
+  const intl = useIntl();
 
   return (
     <div className="flex">
       {/* Main Menu */}
+
       <ul className="menu bg-base-200 rounded-box">
         <li>
           <a className="tooltip tooltip-right" data-tip="Home">
@@ -124,28 +146,50 @@ export const AppLayout = ({
         {/*  */}
         <div className="drawer-side bg-base-100 sm: w-3/4 lg:w-1/5 flex flex-col p-4">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <div className="flex gap-2 w-full">
-            <Link href="/post/new" className="btn btn-outline flex-auto">
-              <FontAwesomeIcon icon={faPlus} />
-              New post
-            </Link>
-            <label
-              htmlFor="my-drawer-2"
-              className="btn drawer-button btn-outline flex-auto"
-              onClick={toggleDrawer}
-            >
-              <FontAwesomeIcon
-                icon={faArrowLeft}
+          <div className="flex flex-col gap-10 w-full">
+            <div className="flex gap-2 w-full">
+              <Link href="/post/new" className="btn btn-outline flex-auto">
+                <FontAwesomeIcon icon={faPlus} />
+                New post
+              </Link>
+              <label
+                htmlFor="my-drawer-2"
+                className="btn drawer-button btn-outline flex-auto"
                 onClick={toggleDrawer}
-                className=""
-              />
-            </label>
+              >
+                <FontAwesomeIcon
+                  icon={faArrowLeft}
+                  onClick={toggleDrawer}
+                  className=""
+                />
+              </label>
+            </div>
+
+            <progress
+              className={` progress ${
+                availableTokens >= 50
+                  ? "progress-success"
+                  : availableTokens <= 25
+                  ? "progress-warning"
+                  : availableTokens < 10
+                  ? " progress-error"
+                  : ""
+              }`}
+              value={availableTokens}
+              max="50"
+            ></progress>
           </div>
 
           <ul className="menu bg-base-200 w-full mt-10">
             {posts.map((post) => (
-              <li key={post._id}>
-                <Link href={`/post/${post._id}`}>{post.topic}</Link>
+              <li key={post._id} className="flex justify-between flex-row">
+                <div className="flex-1 overflow-hidden">
+                  <Link href={`/post/${post._id}`} className="truncate ">
+                    {post.topic}
+                  </Link>
+                </div>
+
+                <FontAwesomeIcon icon={faTrash} />
               </li>
             ))}
             {!noMorePosts && (
@@ -153,135 +197,127 @@ export const AppLayout = ({
                 onClick={() => {
                   getPosts({ lastPostDate: posts[posts.length - 1].create });
                 }}
-                className="hover:underline text-sm text-slate-400 text-center cursor-pointer mt-4"
+                className="hover:underline text-sm text-base-content text-center cursor-pointer mt-4"
               >
                 Load more posts
               </div>
             )}
           </ul>
-          <div className="card w-full bg-base-100 shadow-xl">
-            <div className="card-body">
-              {!!user ? (
-                <>
-                  <div className="flex justify-between items-center">
-                    <Image
-                      src={user.picture}
-                      alt={user.name}
-                      height={50}
-                      width={50}
-                      className="rounded-full"
-                    />
-                    <div className="font-bold">{user.name}</div>
-                  </div>
-                  <div className="flex-1">
-                    <Link className="text-sm" href="/api/auth/logout">
-                      Logout
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <Link href="/api/auth/login">Login</Link>
-              )}
-
-              <progress
-                className={`progress ${
-                  availableTokens >= 50
-                    ? "progress-success"
-                    : availableTokens <= 25
-                    ? "progress-warning"
-                    : availableTokens < 10
-                    ? " progress-error"
-                    : ""
-                }`}
-                value={availableTokens}
-                max="50"
-              ></progress>
-              <div className="card-actions justify-end mt-10">
+          <div className="divider"></div>
+          {/* <div className="flex flex-col "> */}
+          <ul className="menu bg-base-200 w-full">
+            <li>
+              <div>
+                <FontAwesomeIcon icon={faCoins} />
+                <div className="">Buy Tokens</div>
                 <Link href="/token-topup">
-                  <div className="indicator">
-                    <span
-                      className={`indicator-item ${
-                        availableTokens >= 50
-                          ? "badge badge-success"
-                          : availableTokens <= 25
-                          ? "badge badge-warning"
-                          : availableTokens < 10
-                          ? "badge badge-error"
-                          : ""
-                      }`}
-                    >
-                      {availableTokens}
-                    </span>
-                    <button className="btn btn-primary ">buy tokens</button>
+                  <div
+                    className={`badge ${
+                      availableTokens >= 50
+                        ? "badge-success"
+                        : availableTokens <= 25
+                        ? "badge-warning"
+                        : availableTokens < 10
+                        ? " badge-error"
+                        : ""
+                    }`}
+                  >
+                    {availableTokens}
                   </div>
                 </Link>
               </div>
-            </div>
-          </div>
+            </li>
+            <li>
+              <div>
+                <FontAwesomeIcon icon={faCircleHalfStroke} />
+                <div className="">Theme</div>
+                {/* Choose Theme */}
+                <label className="swap swap-rotate">
+                  <input type="checkbox" onChange={toggleTheme} />
+
+                  <FontAwesomeIcon icon={faMoon} className="swap-on" />
+
+                  <FontAwesomeIcon icon={faSun} className="swap-off" />
+                </label>
+              </div>
+            </li>
+            <li>
+              <div>
+                <FontAwesomeIcon icon={faLanguage} />
+                <div className="">Language</div>
+
+                {/* Choose Language */}
+                <div
+                  className={`${
+                    locale === "fa" ? "dropdown-right" : "dropdown-left"
+                  } dropdown dropdown-bottom flex gap-4`}
+                >
+                  <label tabIndex={0} className="cursor-pointer">
+                    <Flag
+                      code={locale === "fa" ? "ir" : "us"}
+                      className="h-4 w-5"
+                    />
+                  </label>
+                  <label className="swap swap-rotate">
+                    <input type="checkbox" onChange={toggleTheme} />
+                  </label>
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32 gap-2 mt-5"
+                  >
+                    {locales.map((locale) => (
+                      <li key={locale}>
+                        <Link
+                          href={asPath}
+                          locale={locale}
+                          className="flex justify-between"
+                        >
+                          <div> {locale === "fa" ? "فارسی" : "English"}</div>
+                          <div>
+                            <Flag
+                              code={locale === "fa" ? "ir" : "us"}
+                              className="h-4 w-5"
+                            />
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* <label className="swap swap-rotate">
+                  <input type="checkbox" onChange={toggleTheme} />
+
+                  <Flag code="ir" className="h-4 w-5 swap-on" />
+                  <Flag code="us" className="h-4 w-5 swap-off" />
+
+                </label> */}
+              </div>
+            </li>
+            <li>
+              {!!user ? (
+                <div>
+                  <Image
+                    src={user.picture}
+                    alt={user.name}
+                    height={20}
+                    width={20}
+                    className="rounded-full"
+                  />
+                  <div className="">{user.name}</div>
+                  <Link href="/api/auth/logout">
+                    <FontAwesomeIcon
+                      icon={faArrowRightFromBracket}
+                      className="text-red-900"
+                    />
+                  </Link>
+                </div>
+              ) : (
+                <Link href="/api/auth/login">Login</Link>
+              )}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-
-    // <div className="grid grid-cols-[300px_1fr] h-screen max-h-screen">
-    //   <div className="flex flex-col text-white overflow-hidden">
-    //     <div className="bg-slate-800 px-2">
-    //       {/* <Logo /> */}
-    //       <Link href="/post/new" className="btn">
-    //         New post
-    //       </Link>
-    //       <Link href="/token-topup" className="block mt-2 text-center">
-    //         <FontAwesomeIcon icon={faCoins} className="text-yellow-500" />
-    //         <span className="pl-1">{availableTokens} tokens available</span>
-    //       </Link>
-    //     </div>
-    //     <div className="px-4 flex-1 overflow-auto bg-gradient-to-b from-slate-800 to-cyan-800">
-    //       {posts.map((post) => (
-    //         <Link
-    //           key={post._id}
-    //           href={`/post/${post._id}`}
-    //           className={`py-1 border border-white/0 block text-ellipsis overflow-hidden whitespace-nowrap my-1 px-2 bg-white/10 cursor-pointer rounded-sm ${
-    //             postId === post._id ? "bg-white/20 border-white" : ""
-    //           }`}
-    //         >
-    //           {post.topic}
-    //         </Link>
-    //       ))}
-    //       {!noMorePosts && (
-    //         <div
-    //           onClick={() => {
-    //             getPosts({ lastPostDate: posts[posts.length - 1].create });
-    //           }}
-    //           className="hover:underline text-sm text-slate-400 text-center cursor-pointer mt-4"
-    //         >
-    //           Load more posts
-    //         </div>
-    //       )}
-    //     </div>
-    //     <div className="bg-cyan-800 flex items-center gap-2 border-t border-t-black/50 h-20 px-2">
-    //       {!!user ? (
-    //         <>
-    //           <div className="min-w-[50px]">
-    //             <Image
-    //               src={user.picture}
-    //               alt={user.name}
-    //               height={50}
-    //               width={50}
-    //               className="rounded-full"
-    //             />
-    //           </div>
-    //           <div className="flex-1">
-    //             <div className="font-bold">{user.email}</div>
-    //             <Link className="text-sm" href="/api/auth/logout">
-    //               Logout
-    //             </Link>
-    //           </div>
-    //         </>
-    //       ) : (
-    //         <Link href="/api/auth/login">Login</Link>
-    //       )}
-    //     </div>
-    //   </div>
-    //   {children}
-    // </div>
   );
 };

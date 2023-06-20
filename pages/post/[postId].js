@@ -3,7 +3,7 @@ import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ObjectId } from "mongodb";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppLayout } from "../../components/AppLayout";
 import PostsContext from "../../context/postsContext";
 import clientPromise from "../../lib/mongodb";
@@ -31,31 +31,32 @@ export default function Post(props) {
       }
     } catch (e) {}
   };
+  // Markup
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.innerHTML = props.postContent;
+    }
+  }, [props.postContent]);
 
   return (
-    <div className="overflow-auto h-full">
+    <div className="overflow-auto h-full px-6">
       <div className="max-w-screen-sm mx-auto">
-        <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">
-          SEO title and meta description
+        <div className="card bg-neutral text-neutral-content p-10">
+          <div className="card-title mb-6">{props.title}</div>
+          <div className="mb-10 text-justify">{props.metaDescription}</div>
+          <div className="font-bold">Keywords</div>
+          <div className="">
+            {props.keywords.split(",").map((keyword, i) => (
+              <div key={i} className="">
+                {keyword}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="p-4 my-2 border border-stone-200 rounded-md">
-          <div className="text-blue-600 text-2xl font-bold">{props.title}</div>
-          <div className="mt-2">{props.metaDescription}</div>
-        </div>
-        <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">
-          Keywords
-        </div>
-        <div className="flex flex-wrap pt-2 gap-1">
-          {props.keywords.split(",").map((keyword, i) => (
-            <div key={i} className="p-2 rounded-full bg-slate-800 text-white">
-              <FontAwesomeIcon icon={faHashtag} /> {keyword}
-            </div>
-          ))}
-        </div>
-        <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">
-          Blog post
-        </div>
-        <div dangerouslySetInnerHTML={{ __html: props.postContent || "" }} />
+
+        <div className="mt-10 px-2" ref={contentRef} />
         <div className="my-4">
           {!showDeleteConfirm && (
             <button

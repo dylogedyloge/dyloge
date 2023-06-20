@@ -37,26 +37,24 @@ export default function NewPost(props) {
   return (
     <div className="h-full overflow-hidden">
       {!!generating && (
-        <div className="text-green-500 flex h-full animate-pulse w-full flex-col justify-center items-center">
-          <FontAwesomeIcon icon={faBrain} className="text-8xl" />
-          <h6>Generating...</h6>
+        <div className=" grid h-screen place-items-center">
+          {" "}
+          <span className="loading loading-dots loading-lg"></span>
         </div>
       )}
       {!generating && (
-        <div className="w-full  grid place-items-center h-screen overflow-auto">
+        <div className=" grid place-items-center overflow-auto">
           <form
             onSubmit={handleSubmit}
-            className="card bg-base-100 shadow-xl p-10"
+            className="card bg-base-100 w-fit shadow-xl p-10"
           >
             <div className="mb-5 ">
               <label className="label grid place-content-center mb-4">
-                <span className="label-text text-md font-semibold">
-                  Generate a blog post on the topic of:
-                </span>
+                <span className="label-text text-md font-semibold">Topic</span>
               </label>
               <textarea
                 placeholder="Top 10 tips for happiness"
-                className="textarea textarea-bordered textarea-lg w-full"
+                className="textarea textarea-bordered  w-full"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 maxLength={80}
@@ -65,16 +63,12 @@ export default function NewPost(props) {
             <div className="mb-10">
               <label className="label grid place-content-center mb-4">
                 <span className="label-text text-md font-semibold ">
-                  Targeting the following keywords:
+                  Keywords (Seperate with comma)
                 </span>
               </label>
-              <div className="alert mb-2 ">
-                <FontAwesomeIcon icon={faCircleInfo} />
-                <span className="text-sm">Separate keywords with a comma</span>
-              </div>
               <textarea
                 placeholder="happines, self-steem, Anthony Robins"
-                className="textarea textarea-bordered textarea-lg w-full"
+                className="textarea textarea-bordered  w-full"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 maxLength={80}

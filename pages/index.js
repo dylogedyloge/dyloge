@@ -29,10 +29,9 @@ export default function Home({ dir }) {
     body.setAttribute("data-theme", theme);
   }, [theme]);
 
+  // i18n
   const { locale, locales, push, asPath } = useRouter();
   const intl = useIntl();
-
-  // i18n
   const logo = intl.formatMessage({
     id: "page.home.logo",
   });
