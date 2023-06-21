@@ -46,7 +46,7 @@ export default function NewPost(props) {
         <div className=" grid place-items-center overflow-auto">
           <form
             onSubmit={handleSubmit}
-            className="card bg-base-100 w-fit shadow-xl p-10"
+            className="card bg-base-100 w-fit shadow-xl p-10 border"
           >
             <div className="mb-5 ">
               <label className="label grid place-content-center mb-4">
@@ -68,7 +68,7 @@ export default function NewPost(props) {
               </label>
               <textarea
                 placeholder="happines, self-steem, Anthony Robins"
-                className="textarea textarea-bordered  w-full"
+                className="textarea textarea-bordered w-full"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 maxLength={80}

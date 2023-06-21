@@ -22,7 +22,7 @@ export default function Home({ dir }) {
   // Theme Change
   const [theme, setTheme] = useLocalStorage();
   const toggleTheme = () => {
-    setTheme(theme === "business" ? "corporate" : "business");
+    setTheme(theme === "dracula" ? "cmyk" : "dracula");
   };
   useEffect(() => {
     const body = document.body;
@@ -335,7 +335,7 @@ export default function Home({ dir }) {
           <div>
             <h1 className="text-2xl font-semibold mb-10">{heroTitle}</h1>
             <h1 className="text-8xl font-bold">{logo}</h1>
-            <p className="py-6">{heroDescription}</p>
+            <div className="py-6">{heroDescription}</div>
 
             <Link href="/post/new" className="btn btn-primary">
               {getStartedButton}
@@ -363,7 +363,7 @@ export default function Home({ dir }) {
                       <FontAwesomeIcon icon={i.icon} className="text-primary" />
                       <div>{i.title}</div>
                     </h2>
-                    <p>{i.description}</p>
+                    <div>{i.description}</div>
                   </div>
                 </div>
               );
@@ -392,14 +392,14 @@ export default function Home({ dir }) {
                     </div>
                   </div>
                   <div className="card-body items-center text-center">
-                    <p>{t.text}</p>
+                    <div>{t.text}</div>
                     <div className="flex">
-                      <p className="text-slate-500">{t.name}</p>
-                      <p className="text-slate-500">-{t.position}</p>
+                      <div className="text-slate-500">{t.name}</div>
+                      <div className="text-slate-500">-{t.position}</div>
                     </div>
                     <div className="flex gap-4 items-center justify-between">
                       <FontAwesomeIcon icon={t.companyLogo} className="" />
-                      <p className="text-slate-500">{t.company}</p>
+                      <div className="text-slate-500">{t.company}</div>
                     </div>
                   </div>
                 </div>
@@ -413,8 +413,8 @@ export default function Home({ dir }) {
         <div className="">
           <Image src="/dyloge.png" width={50} height={50} alt="dyloge" />
 
-          <p className="font-bold">dyloge</p>
-          <p>Copyright © 2023 - All right reserved</p>
+          <div className="font-bold">dyloge</div>
+          <div>Copyright © 2023 - All right reserved</div>
         </div>
         <div>
           <div className="grid grid-flow-col gap-4">

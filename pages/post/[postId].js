@@ -1,6 +1,4 @@
 import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
-import { faHashtag } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ObjectId } from "mongodb";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -41,9 +39,9 @@ export default function Post(props) {
   }, [props.postContent]);
 
   return (
-    <div className="overflow-auto h-full px-6">
-      <div className="max-w-screen-sm mx-auto">
-        <div className="card bg-neutral text-neutral-content p-10">
+    <div className="overflow-auto min-h-screen px-6 ">
+      <div className="max-w-screen-md mx-auto">
+        <div className="card  p-10">
           <div className="card-title mb-6">{props.title}</div>
           <div className="mb-10 text-justify">{props.metaDescription}</div>
           <div className="font-bold">Keywords</div>

@@ -23,7 +23,7 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ["corporate", "business"],
+    themes: ["cmyk", "dracula"],
   },
   plugins: [require("daisyui")],
 };
