@@ -35,7 +35,7 @@ export default function NewPost(props) {
     }
   };
   return (
-    <div className="h-full overflow-hidden">
+    <div className="h-screen overflow-hidden">
       {!!generating && (
         <div className=" grid h-screen place-items-center">
           {" "}
@@ -43,18 +43,18 @@ export default function NewPost(props) {
         </div>
       )}
       {!generating && (
-        <div className=" grid place-items-center overflow-auto">
+        <div className="min-h-screen grid place-items-center overflow-auto mx-2">
           <form
             onSubmit={handleSubmit}
-            className="card bg-base-100 w-fit shadow-xl p-10 border"
+            className="card card-bordered border-base-content bg-base-100 w-fit shadow-xl p-10 "
           >
             <div className="mb-5 ">
               <label className="label grid place-content-center mb-4">
-                <span className="label-text text-md font-semibold">Topic</span>
+                <span className="label-text text-md font-semibold ">Topic</span>
               </label>
               <textarea
                 placeholder="Top 10 tips for happiness"
-                className="textarea textarea-bordered  w-full"
+                className="textarea border-base-content w-full"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 maxLength={80}
@@ -68,7 +68,7 @@ export default function NewPost(props) {
               </label>
               <textarea
                 placeholder="happines, self-steem, Anthony Robins"
-                className="textarea textarea-bordered w-full"
+                className="textarea w-full border-base-content"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 maxLength={80}

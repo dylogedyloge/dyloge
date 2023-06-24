@@ -22,7 +22,7 @@ export default function Home({ dir }) {
   // Theme Change
   const [theme, setTheme] = useLocalStorage();
   const toggleTheme = () => {
-    setTheme(theme === "dracula" ? "cmyk" : "dracula");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
   useEffect(() => {
     const body = document.body;

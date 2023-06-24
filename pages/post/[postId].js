@@ -3,15 +3,69 @@ import { ObjectId } from "mongodb";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppLayout } from "../../components/AppLayout";
+
+import EditDropDown from "@/components/EditDropDown/EditDropDown";
 import PostsContext from "../../context/postsContext";
 import clientPromise from "../../lib/mongodb";
 import { getAppProps } from "../../utils/getAppProps";
+import ReactHtmlParser from "react-html-parser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagic } from "@fortawesome/free-solid-svg-icons";
 
 export default function Post(props) {
   // console.log("PROPS: ", props);
   const router = useRouter();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { deletePost } = useContext(PostsContext);
+
+  // Add button with mouseover
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
+
+  const handleMouseEnter = (index) => {
+    setHoveredIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(-1);
+  };
+
+  const renderParagraph = (node, index) => {
+    const isHovered = index === hoveredIndex;
+
+    return (
+      <p
+        key={index}
+        onMouseEnter={() => handleMouseEnter(index)}
+        onMouseLeave={handleMouseLeave}
+        className="relative"
+      >
+        {isHovered && (
+          <div className="absolute -left-14 top-0 transform -translate-y-1/2 mt-3 z-10">
+            <EditDropDown />
+          </div>
+        )}
+        {node}
+      </p>
+    );
+  };
+
+  const parseContent = (content) => {
+    const parsed = ReactHtmlParser(content, {
+      transform: (node, index) => {
+        if (node.type === "tag" && node.name === "p") {
+          const cleanedChildren = node.children.map((child) =>
+            child.type === "text" ? child.data : ""
+          );
+          return renderParagraph(cleanedChildren.join(""), index);
+        }
+        return null;
+      },
+    });
+
+    return parsed;
+  };
+
+  const parsedContent = parseContent(props.postContent);
 
   const handleDeleteConfirm = async () => {
     try {
@@ -29,14 +83,6 @@ export default function Post(props) {
       }
     } catch (e) {}
   };
-  // Markup
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.innerHTML = props.postContent;
-    }
-  }, [props.postContent]);
 
   return (
     <div className="overflow-auto min-h-screen px-6 ">
@@ -53,8 +99,8 @@ export default function Post(props) {
             ))}
           </div>
         </div>
+        <div className="prose prose-img:rounded-xl">{parsedContent}</div>
 
-        <div className="mt-10 px-2" ref={contentRef} />
         <div className="my-4">
           {!showDeleteConfirm && (
             <button

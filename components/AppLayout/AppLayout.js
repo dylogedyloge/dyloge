@@ -1,7 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import {
-  faArrowLeft,
-  faArrowRight,
+  faAnglesLeft,
+  faAnglesRight,
   faArrowRightFromBracket,
   faCircleHalfStroke,
   faCode,
@@ -10,6 +10,7 @@ import {
   faFileUpload,
   faHouse,
   faImage,
+  faInfo,
   faLanguage,
   faMoon,
   faPlus,
@@ -17,6 +18,7 @@ import {
   faSun,
   faTrash,
   faUpload,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -58,7 +60,7 @@ export const AppLayout = ({
   // Theme Change
   const [theme, setTheme] = useLocalStorage();
   const toggleTheme = () => {
-    setTheme(theme === "dracula" ? "cmyk" : "dracula");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
   useEffect(() => {
     const body = document.body;
@@ -72,8 +74,8 @@ export const AppLayout = ({
     <div className="flex">
       {/* Main Menu */}
 
-      <ul className="menu bg-base-100 border border-l-0 border-t-0 border-b-0">
-        <li className="flex items-center">
+      {/* <ul className="menu bg-base-100 border border-l-0 border-t-0 border-b-0  h-screen justify-between">
+        <li className="">
           <FontAwesomeIcon icon={faHouse} />
         </li>
         <li>
@@ -88,7 +90,7 @@ export const AppLayout = ({
         <li>
           <FontAwesomeIcon icon={faUpload} />
         </li>
-      </ul>
+      </ul> */}
       {/*  */}
       <div className="drawer ">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -101,7 +103,8 @@ export const AppLayout = ({
             onClick={toggleDrawer}
           >
             <FontAwesomeIcon
-              icon={faArrowRight}
+              // icon={faArrowRight}
+              icon={faAnglesRight}
               onClick={toggleDrawer}
               className="hidden lg:hidden"
             />
@@ -126,7 +129,7 @@ export const AppLayout = ({
                 onClick={toggleDrawer}
               >
                 <FontAwesomeIcon
-                  icon={faArrowLeft}
+                  icon={faAnglesLeft}
                   onClick={toggleDrawer}
                   className=""
                 />
@@ -157,7 +160,8 @@ export const AppLayout = ({
                   </Link>
                 </div>
 
-                <FontAwesomeIcon icon={faTrash} />
+                {/* <FontAwesomeIcon icon={faTrash} /> */}
+                <FontAwesomeIcon icon={faXmark} />
               </li>
             ))}
             {!noMorePosts && (
@@ -203,9 +207,35 @@ export const AppLayout = ({
                 <label className="swap swap-rotate">
                   <input type="checkbox" onChange={toggleTheme} />
 
-                  <FontAwesomeIcon icon={faMoon} className="swap-on" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 swap-off"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+                    />
+                  </svg>
 
-                  <FontAwesomeIcon icon={faSun} className="swap-off" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 swap-on"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                    />
+                  </svg>
                 </label>
               </div>
             </li>

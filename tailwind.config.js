@@ -23,7 +23,7 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ["cmyk", "dracula"],
+    themes: ["light", "dark"],
   },
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require("@tailwindcss/typography")],
 };
