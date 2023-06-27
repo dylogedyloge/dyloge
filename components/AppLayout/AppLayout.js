@@ -29,6 +29,7 @@ import { useLocalStorage } from "usehooks-ts";
 import Flag from "react-world-flags";
 import { useIntl } from "react-intl";
 import { useRouter } from "next/router";
+import DeleteConfirmationModal from "../DeletConfirmation/DeletConfirmation";
 
 export const AppLayout = ({
   children,
@@ -161,7 +162,10 @@ export const AppLayout = ({
                 </div>
 
                 {/* <FontAwesomeIcon icon={faTrash} /> */}
-                <FontAwesomeIcon icon={faXmark} />
+                {/* <div> */}
+                {/* <FontAwesomeIcon icon={faXmark} /> */}
+                {/* <DeleteConfirmationModal onDelete={handleDeleteConfirm} /> */}
+                {/* </div> */}
               </li>
             ))}
             {!noMorePosts && (

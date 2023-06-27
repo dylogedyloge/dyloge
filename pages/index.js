@@ -337,11 +337,11 @@ export default function Home({ dir }) {
             <h1 className="text-8xl font-bold">{logo}</h1>
             <div className="py-6">{heroDescription}</div>
 
-            <Link href="/post/new" className="btn btn-primary">
+            <Link href="/post/new" className="btn btn-neutral">
               {getStartedButton}
             </Link>
 
-            {/* <button className="btn btn-primary">{getStartedButton}</button> */}
+            {/* <button className="btn btn-neutral">{getStartedButton}</button> */}
           </div>
         </div>
       </div>

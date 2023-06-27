@@ -3,20 +3,84 @@ import { ObjectId } from "mongodb";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppLayout } from "../../components/AppLayout";
-
+import DeleteConfirmationModal from "@/components/DeletConfirmation/DeletConfirmation";
 import EditDropDown from "@/components/EditDropDown/EditDropDown";
 import PostsContext from "../../context/postsContext";
 import clientPromise from "../../lib/mongodb";
 import { getAppProps } from "../../utils/getAppProps";
 import ReactHtmlParser from "react-html-parser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagic } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { saveAs } from "file-saver";
+import { BsFiletypeDocx, BsFiletypeMdx, BsFiletypeTxt } from "react-icons/bs";
+import { FileIcon, defaultStyles } from "react-file-icon";
 
 export default function Post(props) {
-  // console.log("PROPS: ", props);
+  console.log("PROPS: ", props);
   const router = useRouter();
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { deletePost } = useContext(PostsContext);
+  const contentRef = useRef(null);
+  // Apply Edit
+  const [content, setContent] = useState(props.postContent);
+  const handleUpdateContent = (updatedContent) => {
+    setContent(updatedContent);
+  };
+  const handleSaveContent = async () => {
+    try {
+      const response = await fetch(`/api/updateContent`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: props.id,
+          updatedContent: content,
+        }),
+      });
+      const json = await response.json();
+      if (json.success) {
+        console.log("Content saved successfully.");
+      }
+    } catch (error) {
+      console.error("Error saving content:", error);
+    }
+  };
+  // Download
+  const handleDownload = async (format) => {
+    const content = contentRef.current.innerHTML;
+
+    switch (format) {
+      case "txt":
+        const plainText = content.replace(/<[^>]+>/g, "");
+        const txtBlob = new Blob([plainText], {
+          type: "text/plain;charset=utf-8",
+        });
+        saveAs(txtBlob, `page.txt`);
+        break;
+      case "mdx":
+        const mdxContent = `---
+title: page
+---
+
+${content}`;
+        const mdxBlob = new Blob([mdxContent], {
+          type: "text/markdown;charset=utf-8",
+        });
+        saveAs(mdxBlob, `page.mdx`);
+
+        break;
+      case "docx":
+        // Generate DOCX and download
+        const docxContent = `<html><body>${content}</body></html>`;
+        const docxFile = new Blob([docxContent], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+        saveAs(docxFile, `page.docx`);
+        break;
+      default:
+        break;
+    }
+  };
 
   // Add button with mouseover
   const [hoveredIndex, setHoveredIndex] = useState(-1);
@@ -29,36 +93,73 @@ export default function Post(props) {
     setHoveredIndex(-1);
   };
 
-  const renderParagraph = (node, index) => {
+  const renderNode = (node, index) => {
     const isHovered = index === hoveredIndex;
 
-    return (
-      <p
-        key={index}
-        onMouseEnter={() => handleMouseEnter(index)}
-        onMouseLeave={handleMouseLeave}
-        className="relative"
-      >
-        {isHovered && (
-          <div className="absolute -left-14 top-0 transform -translate-y-1/2 mt-3 z-10">
-            <EditDropDown />
-          </div>
-        )}
-        {node}
-      </p>
-    );
+    if (node.type === "tag") {
+      const { name, children, attribs, ...rest } = node;
+      const Tag = name;
+
+      if (
+        Tag === "p" ||
+        Tag.startsWith("h") ||
+        Tag === "span" ||
+        Tag === "div"
+      ) {
+        const tagContent = (
+          <React.Fragment>
+            {children && children.map((child, i) => renderNode(child, i))}
+          </React.Fragment>
+        );
+
+        return (
+          <React.Fragment key={index}>
+            <div
+              className={`relative ${isHovered ? "z-10" : ""}`}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeave}
+            >
+              {isHovered && (
+                <div className="absolute -left-4 top-4 transform -translate-y-full mt-3">
+                  <EditDropDown
+                    node={node}
+                    onUpdateContent={handleUpdateContent}
+                    onSaveContent={handleSaveContent}
+                    className="absolute -left-4 top-4 transform -translate-y-full mt-3"
+                  />
+                </div>
+              )}
+              <Tag {...attribs} className={isHovered ? "relative" : ""}>
+                {tagContent}
+              </Tag>
+            </div>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <Tag
+            {...attribs}
+            key={index}
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={handleMouseLeave}
+          >
+            {children && children.map((child, i) => renderNode(child, i))}
+          </Tag>
+        );
+      }
+    }
+
+    if (node.type === "text") {
+      return node.data;
+    }
+
+    return null;
   };
 
   const parseContent = (content) => {
     const parsed = ReactHtmlParser(content, {
       transform: (node, index) => {
-        if (node.type === "tag" && node.name === "p") {
-          const cleanedChildren = node.children.map((child) =>
-            child.type === "text" ? child.data : ""
-          );
-          return renderParagraph(cleanedChildren.join(""), index);
-        }
-        return null;
+        return renderNode(node, index);
       },
     });
 
@@ -85,53 +186,79 @@ export default function Post(props) {
   };
 
   return (
-    <div className="overflow-auto min-h-screen px-6 ">
+    <div className="overflow-auto min-h-screen">
       <div className="max-w-screen-md mx-auto">
         <div className="card  p-10">
-          <div className="card-title mb-6">{props.title}</div>
-          <div className="mb-10 text-justify">{props.metaDescription}</div>
-          <div className="font-bold">Keywords</div>
-          <div className="">
+          <div className="card-title text-2xl font-bold mt-4 mb-6 ">
+            {props.title}
+          </div>
+          <div className="mb-10 text-justify prose">
+            {props.metaDescription}
+          </div>
+          <div className="font-bold prose">Keywords</div>
+          <div>
             {props.keywords.split(",").map((keyword, i) => (
-              <div key={i} className="">
+              <div key={i} className="prose">
                 {keyword}
               </div>
             ))}
           </div>
         </div>
-        <div className="prose prose-img:rounded-xl">{parsedContent}</div>
-
-        <div className="my-4">
-          {!showDeleteConfirm && (
-            <button
-              className="btn bg-red-600 hover:bg-red-700"
-              onClick={() => setShowDeleteConfirm(true)}
-            >
-              Delete post
+        <div
+          className="prose prose-img:rounded-xl p-10 max-w-screen-md"
+          ref={contentRef}
+        >
+          {parsedContent}
+        </div>
+        <div className="p-10 flex justify-between">
+          <DeleteConfirmationModal onDelete={handleDeleteConfirm} />
+          <div className="tooltip capitalize" data-tip="regenerate">
+            <button className="btn ">
+              <FontAwesomeIcon icon={faRepeat} />
             </button>
-          )}
-          {!!showDeleteConfirm && (
-            <div>
-              <p className="p-2 bg-red-300 text-center">
-                Are you sure you want to delete this post? This action is
-                irreversible
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="btn bg-stone-600 hover:bg-stone-700"
-                >
-                  cancel
-                </button>
-                <button
-                  onClick={handleDeleteConfirm}
-                  className="btn bg-red-600 hover:bg-red-700"
-                >
-                  confirm delete
-                </button>
-              </div>
+          </div>
+          <div className="dropdown  dropdown-top dropdown-end">
+            <div className="tooltip capitalize" data-tip="download">
+              <label tabIndex={0} className="btn m-1">
+                <FontAwesomeIcon icon={faDownload} />
+              </label>
             </div>
-          )}
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-fit "
+            >
+              <div className="tooltip " data-tip=".txt">
+                <li>
+                  <a
+                    onClick={() => handleDownload("txt")}
+                    className="flex justify-between items-center w-20"
+                  >
+                    <FileIcon extension="txt" {...defaultStyles.txt} />
+                  </a>
+                </li>
+              </div>
+              <div className="tooltip " data-tip=".mdx">
+                <li>
+                  <a
+                    onClick={() => handleDownload("mdx")}
+                    className="flex justify-between items-center w-20"
+                  >
+                    <FileIcon extension="mdx" {...defaultStyles.mdx} />
+                  </a>
+                </li>
+              </div>
+              <div className="tooltip " data-tip=".docx">
+                <li>
+                  <a
+                    onClick={() => handleDownload("docx")}
+                    className="flex justify-between items-center w-20"
+                  >
+                    <FileIcon extension="docx" {...defaultStyles.docx} />
+                  </a>
+                </li>
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
