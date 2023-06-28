@@ -16,35 +16,50 @@ import { BsFiletypeDocx, BsFiletypeMdx, BsFiletypeTxt } from "react-icons/bs";
 import { FileIcon, defaultStyles } from "react-file-icon";
 
 export default function Post(props) {
-  console.log("PROPS: ", props);
+  // console.log("PROPS: ", props);
   const router = useRouter();
   const { deletePost } = useContext(PostsContext);
+  const { editPost } = useContext(PostsContext);
+
   const contentRef = useRef(null);
-  // Apply Edit
-  const [content, setContent] = useState(props.postContent);
-  const handleUpdateContent = (updatedContent) => {
-    setContent(updatedContent);
-  };
+
   const handleSaveContent = async () => {
+    console.log(props.id);
     try {
-      const response = await fetch(`/api/updateContent`, {
+      // Retrieve the original content from the server
+      const response = await fetch(`/api/getPost/${props.id}`);
+      // HERE IS THE PROBLEM
+      const json = await response.json();
+      const originalContent = json.content;
+
+      // Replace the specific paragraph in the original content with the updated content
+      const modifiedContent = originalContent.replace(
+        props.selectedParagraph,
+        content
+      );
+
+      // Send the modified content to the server
+      const updateResponse = await fetch(`/api/updateContent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           postId: props.id,
-          updatedContent: content,
+          updatedContent: modifiedContent,
         }),
       });
-      const json = await response.json();
-      if (json.success) {
+      const updateJson = await updateResponse.json();
+      if (updateJson.success) {
         console.log("Content saved successfully.");
+        // Update the postContent state with the updated content
+        setContent(content);
       }
     } catch (error) {
       console.error("Error saving content:", error);
     }
   };
+
   // Download
   const handleDownload = async (format) => {
     const content = contentRef.current.innerHTML;
@@ -81,6 +96,34 @@ ${content}`;
         break;
     }
   };
+
+  // Edit
+  const [content, setContent] = useState(props.postContent);
+  const [updatedContent, setUpdatedContent] = useState(props.postContent);
+  // const handleEditConfirm = async () => {
+  //   try {
+  //     const response = await fetch(`/api/editPost`, {
+  //       method: "POST",
+  //       headers: {
+  //         "content-type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         postId: props.id,
+  //         content: updatedContent,
+  //       }),
+  //     });
+  //     const json = await response.json();
+  //     if (json.success) {
+  //       editPost(props.id, updatedContent);
+  //       setContent(updatedContent);
+  //       console.log("Post updated successfully!", content);
+  //     } else {
+  //       console.log("Failed to update post. Please try again.");
+  //     }
+  //   } catch (e) {
+  //     console.log("Error editing post:", error);
+  //   }
+  // };
 
   // Add button with mouseover
   const [hoveredIndex, setHoveredIndex] = useState(-1);
@@ -122,9 +165,8 @@ ${content}`;
               {isHovered && (
                 <div className="absolute -left-4 top-4 transform -translate-y-full mt-3">
                   <EditDropDown
+                    handleSaveContent={handleSaveContent}
                     node={node}
-                    onUpdateContent={handleUpdateContent}
-                    onSaveContent={handleSaveContent}
                     className="absolute -left-4 top-4 transform -translate-y-full mt-3"
                   />
                 </div>
@@ -166,7 +208,8 @@ ${content}`;
     return parsed;
   };
 
-  const parsedContent = parseContent(props.postContent);
+  // const parsedContent = parseContent(props.postContent);
+  const parsedContent = parseContent(content);
 
   const handleDeleteConfirm = async () => {
     try {
@@ -208,7 +251,8 @@ ${content}`;
           className="prose prose-img:rounded-xl p-10 max-w-screen-md"
           ref={contentRef}
         >
-          {parsedContent}
+          {/* {parseContent(content)} */}
+          {parseContent(props.postContent)}
         </div>
         <div className="p-10 flex justify-between">
           <DeleteConfirmationModal onDelete={handleDeleteConfirm} />
@@ -269,6 +313,42 @@ Post.getLayout = function getLayout(page, pageProps) {
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
+// export const getServerSideProps = withPageAuthRequired({
+//   async getServerSideProps(ctx) {
+//     const props = await getAppProps(ctx);
+//     const userSession = await getSession(ctx.req, ctx.res);
+//     const client = await clientPromise;
+//     const db = client.db("BlogStandard");
+//     const user = await db.collection("users").findOne({
+//       auth0Id: userSession.user.sub,
+//     });
+//     const post = await db.collection("posts").findOne({
+//       _id: new ObjectId(ctx.params.postId),
+//       userId: user._id,
+//     });
+
+//     if (!post) {
+//       return {
+//         redirect: {
+//           destination: "/post/new",
+//           permanent: false,
+//         },
+//       };
+//     }
+
+//     return {
+//       props: {
+//         id: ctx.params.postId,
+//         postContent: post.postContent,
+//         title: post.title,
+//         metaDescription: post.metaDescription,
+//         keywords: post.keywords,
+//         postCreated: post.create.toString(),
+//         ...props,
+//       },
+//     };
+//   },
+// });
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(ctx) {
     const props = await getAppProps(ctx);

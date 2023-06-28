@@ -3,12 +3,12 @@ import {
   faEllipsis,
   faPenNib,
   faRepeat,
-  faTimes,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 
-const EditDropDown = ({ node, onUpdateContent, onSaveContent }) => {
+const EditDropDown = ({ node, handleSaveContent }) => {
   const [editing, setEditing] = useState(false);
   const [currentText, setCurrentText] = useState(node.children[0].data);
 
@@ -22,8 +22,9 @@ const EditDropDown = ({ node, onUpdateContent, onSaveContent }) => {
 
   const handleSave = () => {
     setEditing(false);
-    onSaveContent(currentText);
-    onUpdateContent(currentText);
+    onEdit(currentText);
+    // console.log(node.children[0].data);
+    console.log(currentText);
   };
 
   const handleChange = (event) => {
@@ -41,7 +42,7 @@ const EditDropDown = ({ node, onUpdateContent, onSaveContent }) => {
       <dialog id="my_modal_5" className="z-10 modal modal-middle ">
         <form method="dialog" className="modal-box ">
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-            <FontAwesomeIcon icon={faTimes} />
+            <FontAwesomeIcon icon={faXmark} />
           </button>
           {editing ? (
             <div className="flex flex-col justify-between items-center gap-6 mt-10  ">
@@ -52,7 +53,7 @@ const EditDropDown = ({ node, onUpdateContent, onSaveContent }) => {
               ></textarea>
               <button
                 className="btn btn-block btn-neutral"
-                onClick={handleSave}
+                onClick={handleSaveContent}
               >
                 Save
               </button>
@@ -66,15 +67,15 @@ const EditDropDown = ({ node, onUpdateContent, onSaveContent }) => {
             <div className="flex justify-around items-center">
               <a className="btn no-underline capitalize" onClick={handlePrint}>
                 <FontAwesomeIcon icon={faRepeat} />
-                <div>Regenerate</div>
+                <div className=" hidden sm:block">Regenerate</div>
               </a>
               <a className="btn no-underline capitalize" onClick={handleEdit}>
                 <FontAwesomeIcon icon={faPenNib} />
-                <div>Edit</div>
+                <div className=" hidden sm:block">Edit</div>
               </a>
               <a className="btn no-underline capitalize" onClick={handlePrint}>
                 <FontAwesomeIcon icon={faArrowRotateLeft} />
-                <div>Rephrase</div>
+                <div className="hidden sm:block">Rephrase</div>
               </a>
             </div>
           )}

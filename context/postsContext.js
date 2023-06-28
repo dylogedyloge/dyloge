@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import React, { useCallback, useReducer, useState } from "react";
 
 const PostsContext = React.createContext({});
@@ -26,6 +25,18 @@ function postsReducer(state, action) {
       });
       return newPosts;
     }
+    case "editPost": {
+      const newPosts = state.map((post) => {
+        if (post._id === action.postId) {
+          return {
+            ...post,
+            content: action.content,
+          };
+        }
+        return post;
+      });
+      return newPosts;
+    }
     default:
       return state;
   }
@@ -39,6 +50,14 @@ export const PostsProvider = ({ children }) => {
     dispatch({
       type: "deletePost",
       postId,
+    });
+  }, []);
+
+  const editPost = useCallback((postId, content) => {
+    dispatch({
+      type: "editPost",
+      postId,
+      content,
     });
   }, []);
 
@@ -73,7 +92,14 @@ export const PostsProvider = ({ children }) => {
 
   return (
     <PostsContext.Provider
-      value={{ posts, setPostsFromSSR, getPosts, noMorePosts, deletePost }}
+      value={{
+        posts,
+        setPostsFromSSR,
+        getPosts,
+        noMorePosts,
+        deletePost,
+        editPost,
+      }}
     >
       {children}
     </PostsContext.Provider>
