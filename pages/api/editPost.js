@@ -22,7 +22,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       },
       {
         $set: {
-          content: content,
+          content,
         },
       }
     );

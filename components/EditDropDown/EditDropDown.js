@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 
-const EditDropDown = ({ node, handleSaveContent }) => {
+const EditDropDown = ({ node, props }) => {
   const [editing, setEditing] = useState(false);
   const [currentText, setCurrentText] = useState(node.children[0].data);
 
@@ -20,11 +20,42 @@ const EditDropDown = ({ node, handleSaveContent }) => {
     console.log(currentText);
   };
 
-  const handleSave = () => {
-    setEditing(false);
-    onEdit(currentText);
-    // console.log(node.children[0].data);
-    console.log(currentText);
+  const handleSaveContent = async () => {
+    try {
+      // Retrieve original post
+      const response = await fetch(`/api/getPostById`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: props.id,
+        }),
+      });
+      const data = await response.json();
+      const postContent = data.content;
+
+      const editedContent = postContent.replace(
+        node.children[0].data,
+        currentText
+      );
+      const editResponse = await fetch(`/api/editPost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: props.id,
+          content: editedContent,
+        }),
+      });
+      const editJson = await editResponse.json();
+      if (editJson.success) {
+        console.log("Content saved successfully.");
+      }
+    } catch (error) {
+      console.error("Error saving content:", error);
+    }
   };
 
   const handleChange = (event) => {

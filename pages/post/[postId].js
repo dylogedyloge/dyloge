@@ -20,45 +20,37 @@ export default function Post(props) {
   const router = useRouter();
   const { deletePost } = useContext(PostsContext);
   const { editPost } = useContext(PostsContext);
-
+  // Edit
+  const [content, setContent] = useState(props.postContent);
   const contentRef = useRef(null);
 
-  const handleSaveContent = async () => {
-    console.log(props.id);
-    try {
-      // Retrieve the original content from the server
-      const response = await fetch(`/api/getPost/${props.id}`);
-      // HERE IS THE PROBLEM
-      const json = await response.json();
-      const originalContent = json.content;
-
-      // Replace the specific paragraph in the original content with the updated content
-      const modifiedContent = originalContent.replace(
-        props.selectedParagraph,
-        content
-      );
-
-      // Send the modified content to the server
-      const updateResponse = await fetch(`/api/updateContent`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postId: props.id,
-          updatedContent: modifiedContent,
-        }),
-      });
-      const updateJson = await updateResponse.json();
-      if (updateJson.success) {
-        console.log("Content saved successfully.");
-        // Update the postContent state with the updated content
-        setContent(content);
-      }
-    } catch (error) {
-      console.error("Error saving content:", error);
-    }
-  };
+  // const handleSaveContent = async (
+  //   originalSelectedContent,
+  //   editedSelectedContent
+  // ) => {
+  //   try {
+  //     const editedContent = content.replace(
+  //       originalSelectedContent,
+  //       editedSelectedContent
+  //     );
+  //     const editResponse = await fetch(`/api/editPost`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         postId: props.id,
+  //         content: editedContent,
+  //       }),
+  //     });
+  //     const editJson = await editResponse.json();
+  //     if (editJson.success) {
+  //       console.log("Content saved successfully.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error saving content:", error);
+  //   }
+  // };
 
   // Download
   const handleDownload = async (format) => {
@@ -96,34 +88,6 @@ ${content}`;
         break;
     }
   };
-
-  // Edit
-  const [content, setContent] = useState(props.postContent);
-  const [updatedContent, setUpdatedContent] = useState(props.postContent);
-  // const handleEditConfirm = async () => {
-  //   try {
-  //     const response = await fetch(`/api/editPost`, {
-  //       method: "POST",
-  //       headers: {
-  //         "content-type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         postId: props.id,
-  //         content: updatedContent,
-  //       }),
-  //     });
-  //     const json = await response.json();
-  //     if (json.success) {
-  //       editPost(props.id, updatedContent);
-  //       setContent(updatedContent);
-  //       console.log("Post updated successfully!", content);
-  //     } else {
-  //       console.log("Failed to update post. Please try again.");
-  //     }
-  //   } catch (e) {
-  //     console.log("Error editing post:", error);
-  //   }
-  // };
 
   // Add button with mouseover
   const [hoveredIndex, setHoveredIndex] = useState(-1);
@@ -165,8 +129,9 @@ ${content}`;
               {isHovered && (
                 <div className="absolute -left-4 top-4 transform -translate-y-full mt-3">
                   <EditDropDown
-                    handleSaveContent={handleSaveContent}
+                    // handleSaveContent={handleSaveContent}
                     node={node}
+                    props={props}
                     className="absolute -left-4 top-4 transform -translate-y-full mt-3"
                   />
                 </div>
@@ -253,6 +218,7 @@ ${content}`;
         >
           {/* {parseContent(content)} */}
           {parseContent(props.postContent)}
+          {/* {parseContent(modifiedContent)} */}
         </div>
         <div className="p-10 flex justify-between">
           <DeleteConfirmationModal onDelete={handleDeleteConfirm} />

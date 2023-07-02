@@ -30,7 +30,9 @@ function postsReducer(state, action) {
         if (post._id === action.postId) {
           return {
             ...post,
-            content: action.content,
+            postContent: action.postContent,
+            title: action.title,
+            metaDescription: action.metaDescription,
           };
         }
         return post;
@@ -53,13 +55,18 @@ export const PostsProvider = ({ children }) => {
     });
   }, []);
 
-  const editPost = useCallback((postId, content) => {
-    dispatch({
-      type: "editPost",
-      postId,
-      content,
-    });
-  }, []);
+  const editPost = useCallback(
+    (postId, postContent, title, metaDescription) => {
+      dispatch({
+        type: "editPost",
+        postId,
+        postContent,
+        title,
+        metaDescription,
+      });
+    },
+    []
+  );
 
   const setPostsFromSSR = useCallback((postsFromSSR = []) => {
     dispatch({
