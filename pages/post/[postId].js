@@ -1,7 +1,7 @@
 import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { ObjectId } from "mongodb";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AppLayout } from "../../components/AppLayout";
 import DeleteConfirmationModal from "@/components/DeletConfirmation/DeletConfirmation";
 import EditDropDown from "@/components/EditDropDown/EditDropDown";
@@ -12,45 +12,20 @@ import ReactHtmlParser from "react-html-parser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { saveAs } from "file-saver";
-import { BsFiletypeDocx, BsFiletypeMdx, BsFiletypeTxt } from "react-icons/bs";
 import { FileIcon, defaultStyles } from "react-file-icon";
 
 export default function Post(props) {
   // console.log("PROPS: ", props);
   const router = useRouter();
   const { deletePost } = useContext(PostsContext);
-  const { editPost } = useContext(PostsContext);
-  // Edit
+
   const [content, setContent] = useState(props.postContent);
   const contentRef = useRef(null);
+  // Apply changes
 
-  // const handleSaveContent = async (
-  //   originalSelectedContent,
-  //   editedSelectedContent
-  // ) => {
-  //   try {
-  //     const editedContent = content.replace(
-  //       originalSelectedContent,
-  //       editedSelectedContent
-  //     );
-  //     const editResponse = await fetch(`/api/editPost`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         postId: props.id,
-  //         content: editedContent,
-  //       }),
-  //     });
-  //     const editJson = await editResponse.json();
-  //     if (editJson.success) {
-  //       console.log("Content saved successfully.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error saving content:", error);
-  //   }
-  // };
+  const handleApplyChanges = () => {
+    location.reload();
+  };
 
   // Download
   const handleDownload = async (format) => {
@@ -129,7 +104,6 @@ ${content}`;
               {isHovered && (
                 <div className="absolute -left-4 top-4 transform -translate-y-full mt-3">
                   <EditDropDown
-                    // handleSaveContent={handleSaveContent}
                     node={node}
                     props={props}
                     className="absolute -left-4 top-4 transform -translate-y-full mt-3"
@@ -173,7 +147,6 @@ ${content}`;
     return parsed;
   };
 
-  // const parsedContent = parseContent(props.postContent);
   const parsedContent = parseContent(content);
 
   const handleDeleteConfirm = async () => {
@@ -216,52 +189,66 @@ ${content}`;
           className="prose prose-img:rounded-xl p-10 max-w-screen-md"
           ref={contentRef}
         >
-          {/* {parseContent(content)} */}
-          {parseContent(props.postContent)}
-          {/* {parseContent(modifiedContent)} */}
+          {parsedContent}
         </div>
+        <div className="px-10">
+          <div
+            className="btn btn-block capitalize"
+            onClick={handleApplyChanges}
+          >
+            Apply Changes
+          </div>
+        </div>
+
         <div className="p-10 flex justify-between">
           <DeleteConfirmationModal onDelete={handleDeleteConfirm} />
-          <div className="tooltip capitalize" data-tip="regenerate">
+          <div
+            className="tooltip tooltip-left capitalize"
+            data-tip="regenerate"
+          >
             <button className="btn ">
               <FontAwesomeIcon icon={faRepeat} />
             </button>
           </div>
           <div className="dropdown  dropdown-top dropdown-end">
-            <div className="tooltip capitalize" data-tip="download">
+            <div
+              className="tooltip tooltip-left capitalize"
+              data-tip="download"
+            >
               <label tabIndex={0} className="btn m-1">
                 <FontAwesomeIcon icon={faDownload} />
               </label>
             </div>
+
             <ul
               tabIndex={0}
               className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-fit "
             >
-              <div className="tooltip " data-tip=".txt">
+              <div className="tooltip tooltip-left " data-tip=".txt">
                 <li>
                   <a
                     onClick={() => handleDownload("txt")}
-                    className="flex justify-between items-center w-20"
+                    className="flex justify-between items-center w-16 "
                   >
                     <FileIcon extension="txt" {...defaultStyles.txt} />
                   </a>
                 </li>
               </div>
-              <div className="tooltip " data-tip=".mdx">
+              <div className="tooltip tooltip-left " data-tip=".mdx">
                 <li>
                   <a
                     onClick={() => handleDownload("mdx")}
-                    className="flex justify-between items-center w-20"
+                    className="flex justify-between items-center w-16 "
                   >
                     <FileIcon extension="mdx" {...defaultStyles.mdx} />
                   </a>
                 </li>
               </div>
-              <div className="tooltip " data-tip=".docx">
+              <div className="tooltip tooltip-left " data-tip=".docx">
                 <li>
                   <a
                     onClick={() => handleDownload("docx")}
-                    className="flex justify-between items-center w-20"
+                    className="flex justify-between items-center w-16 "
                   >
                     <FileIcon extension="docx" {...defaultStyles.docx} />
                   </a>

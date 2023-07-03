@@ -20,7 +20,7 @@ const DeleteConfirmationModal = ({ onDelete }) => {
 
   return (
     <div>
-      <div className="tooltip capitalize" data-tip="delete">
+      <div className="tooltip tooltip-left capitalize" data-tip="delete">
         <button className="btn " onClick={openModal}>
           <FontAwesomeIcon icon={faTrash} color="#F87272" />
         </button>

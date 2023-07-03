@@ -2,10 +2,13 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import {
   faAnglesLeft,
   faAnglesRight,
+  faArrowDown,
+  faArrowDownAZ,
   faArrowRightFromBracket,
   faCircleHalfStroke,
   faCode,
   faCoins,
+  faFile,
   faFileImage,
   faFileUpload,
   faHouse,
@@ -18,6 +21,7 @@ import {
   faSun,
   faTrash,
   faUpload,
+  faUser,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -93,7 +97,7 @@ export const AppLayout = ({
         </li>
       </ul> */}
       {/*  */}
-      <div className="drawer ">
+      <div className="drawer  ">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content ">
           {/* Page content here */}
@@ -116,7 +120,7 @@ export const AppLayout = ({
         {/*  */}
 
         {/*  */}
-        <div className="drawer-side bg-base-100 sm: w-3/4 lg:w-1/5 flex flex-col p-4 ">
+        <div className="drawer-side bg-base-100 sm: w-3/4 lg:w-1/5 flex flex-col p-4 outline outline-1 outline-base-200">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
           <div className="flex flex-col gap-10 w-full">
             <div className="flex gap-2 w-full">
@@ -155,8 +159,12 @@ export const AppLayout = ({
           <ul className="menu  w-full mt-10">
             {posts.map((post) => (
               <li key={post._id} className="flex justify-between flex-row">
-                <div className="flex-1 overflow-hidden">
-                  <Link href={`/post/${post._id}`} className="truncate ">
+                <div className="flex-1 overflow-hidden items-center">
+                  <FontAwesomeIcon icon={faFile} />
+                  <Link
+                    href={`/post/${post._id}`}
+                    className="truncate font-bold"
+                  >
                     {post.topic}
                   </Link>
                 </div>
@@ -173,28 +181,29 @@ export const AppLayout = ({
                 onClick={() => {
                   getPosts({ lastPostDate: posts[posts.length - 1].create });
                 }}
-                className="hover:underline text-sm text-base-content text-center cursor-pointer mt-4"
+                className="btn btn-xs mt-10 capitalize"
               >
-                Load more posts
+                {/* <FontAwesomeIcon icon={faArrowDown} /> */}
+                <div>Load more posts</div>
               </div>
             )}
           </ul>
           <div className="divider"></div>
           {/* <div className="flex flex-col "> */}
-          <ul className="menu  w-full">
-            <li>
+          <ul className="menu w-full">
+            <li className="">
               <div>
                 <FontAwesomeIcon icon={faCoins} />
                 <div className="">Buy Tokens</div>
                 <Link href="/token-topup">
                   <div
-                    className={`badge ${
+                    className={`font-bold ${
                       availableTokens >= 50
-                        ? "badge-success"
+                        ? "text-success"
                         : availableTokens <= 25
-                        ? "badge-warning"
+                        ? "text-warning"
                         : availableTokens < 10
-                        ? " badge-error"
+                        ? " text-error"
                         : ""
                     }`}
                   >
@@ -217,7 +226,7 @@ export const AppLayout = ({
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5 swap-off"
+                    className="w-4 h-4 swap-off"
                   >
                     <path
                       strokeLinecap="round"
@@ -232,7 +241,7 @@ export const AppLayout = ({
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5 swap-on"
+                    className="w-4 h-4 swap-on"
                   >
                     <path
                       strokeLinecap="round"
@@ -243,12 +252,10 @@ export const AppLayout = ({
                 </label>
               </div>
             </li>
-            <li>
+            {/* <li>
               <div>
                 <FontAwesomeIcon icon={faLanguage} />
                 <div className="">Language</div>
-
-                {/* Choose Language */}
                 <div
                   className={`${
                     locale === "fa" ? "dropdown-right" : "dropdown-left"
@@ -286,25 +293,19 @@ export const AppLayout = ({
                     ))}
                   </ul>
                 </div>
-                {/* <label className="swap swap-rotate">
-                  <input type="checkbox" onChange={toggleTheme} />
-
-                  <Flag code="ir" className="h-4 w-5 swap-on" />
-                  <Flag code="us" className="h-4 w-5 swap-off" />
-
-                </label> */}
               </div>
-            </li>
+            </li> */}
             <li>
               {!!user ? (
                 <div>
-                  <Image
+                  {/* <Image
                     src={user.picture}
                     alt={user.name}
                     height={20}
                     width={20}
                     className="rounded-full"
-                  />
+                  /> */}
+                  <FontAwesomeIcon icon={faUser} />
                   <div className="">{user.name}</div>
                   <Link href="/api/auth/logout">
                     <FontAwesomeIcon icon={faArrowRightFromBracket} />

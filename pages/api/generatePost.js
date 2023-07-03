@@ -58,7 +58,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         role: "user",
         content: `Write a long and detailed SEO-friendly blog post about ${topic} that targets the following comma-separated keywords: ${keywords}. 
       The response should be formatted in SEO-friendly HTML, 
-      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.Do Not use <head> and <meta> and <title> tag`,
       },
     ],
     temperature: 0,
@@ -77,7 +77,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         role: "user",
         content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
       The response should be formatted in SEO-friendly HTML, 
-      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol. don't use <title> tag</title>`,
+      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol. Do Not use <meta> and <title> tag`,
       },
       {
         role: "assistant",
@@ -85,7 +85,8 @@ export default withApiAuthRequired(async function handler(req, res) {
       },
       {
         role: "user",
-        content: "Generate appropriate title for the above blog post",
+        content:
+          "Generate appropriate title for the above blog post.Do Not use <meta> and <title> tag",
       },
     ],
     temperature: 0,
@@ -102,7 +103,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         role: "user",
         content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
       The response should be formatted in SEO-friendly HTML, 
-      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.Do Not use <meta> and <title> tag`,
       },
       {
         role: "assistant",
@@ -111,7 +112,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       {
         role: "user",
         content:
-          "Generate SEO-friendly meta description content for the above blog post",
+          "Generate SEO-friendly meta description content for the above blog post.Do Not use <meta> and <title> tag",
       },
     ],
     temperature: 0,

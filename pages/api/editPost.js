@@ -13,7 +13,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       auth0Id: sub,
     });
 
-    const { postId, content } = req.body;
+    const { postId, postContent } = req.body;
 
     await db.collection("posts").updateOne(
       {
@@ -22,7 +22,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       },
       {
         $set: {
-          content,
+          postContent,
         },
       }
     );

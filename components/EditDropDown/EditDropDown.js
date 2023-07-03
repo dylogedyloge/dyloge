@@ -6,23 +6,40 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 const EditDropDown = ({ node, props }) => {
+  const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [currentText, setCurrentText] = useState(node.children[0].data);
+  const [regenerating, setRegenerating] = useState(false);
 
   const handleEdit = () => {
     setEditing(true);
   };
 
-  const handlePrint = () => {
-    console.log(currentText);
+  const handleRegenerate = async () => {
+    // console.log(currentText);
+    //   e.preventDefault();
+    setRegenerating(true);
+    try {
+      const response = await fetch(`/api/regenerate`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ currentText }),
+      });
+      console.log(response);
+    } catch (e) {
+      setRegenerating(false);
+    }
   };
 
   const handleSaveContent = async () => {
     try {
-      // Retrieve original post
       const response = await fetch(`/api/getPostById`, {
         method: "POST",
         headers: {
@@ -46,7 +63,7 @@ const EditDropDown = ({ node, props }) => {
         },
         body: JSON.stringify({
           postId: props.id,
-          content: editedContent,
+          postContent: editedContent,
         }),
       });
       const editJson = await editResponse.json();
@@ -96,7 +113,10 @@ const EditDropDown = ({ node, props }) => {
           )}
           {!editing && (
             <div className="flex justify-around items-center">
-              <a className="btn no-underline capitalize" onClick={handlePrint}>
+              <a
+                className="btn no-underline capitalize"
+                onClick={handleRegenerate}
+              >
                 <FontAwesomeIcon icon={faRepeat} />
                 <div className=" hidden sm:block">Regenerate</div>
               </a>
@@ -104,7 +124,10 @@ const EditDropDown = ({ node, props }) => {
                 <FontAwesomeIcon icon={faPenNib} />
                 <div className=" hidden sm:block">Edit</div>
               </a>
-              <a className="btn no-underline capitalize" onClick={handlePrint}>
+              <a
+                className="btn no-underline capitalize"
+                onClick={handleRegenerate}
+              >
                 <FontAwesomeIcon icon={faArrowRotateLeft} />
                 <div className="hidden sm:block">Rephrase</div>
               </a>

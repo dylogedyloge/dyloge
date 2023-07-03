@@ -3,8 +3,6 @@ import { AppLayout } from "../../components/AppLayout";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { getAppProps } from "../../utils/getAppProps";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBrain, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 export default function NewPost(props) {
   const router = useRouter();
