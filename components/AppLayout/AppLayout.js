@@ -33,7 +33,11 @@ import { useLocalStorage } from "usehooks-ts";
 import Flag from "react-world-flags";
 import { useIntl } from "react-intl";
 import { useRouter } from "next/router";
-import DeleteConfirmationModal from "../DeletConfirmation/DeletConfirmation";
+import { AiOutlineFile } from "react-icons/ai";
+import { GiToken } from "react-icons/gi";
+import { MdInvertColors } from "react-icons/md";
+import { BiUser } from "react-icons/bi";
+import { FiLogOut } from "react-icons/fi";
 
 export const AppLayout = ({
   children,
@@ -74,6 +78,17 @@ export const AppLayout = ({
   // i18n
   const { locale, locales, push, asPath } = useRouter();
   const intl = useIntl();
+
+  // Remove html tags and quotations from title
+  function removeHtmlTagsAndQuotation(str) {
+    // Remove HTML tags
+    const withoutTags = str.replace(/(<([^>]+)>)/gi, "");
+
+    // Remove quotation marks
+    const withoutQuotation = withoutTags.replace(/['"]/g, "");
+
+    return withoutQuotation;
+  }
 
   return (
     <div className="flex">
@@ -120,7 +135,7 @@ export const AppLayout = ({
         {/*  */}
 
         {/*  */}
-        <div className="drawer-side bg-base-100 sm: w-3/4 lg:w-1/5 flex flex-col p-4 outline outline-1 outline-base-200">
+        <div className="drawer-side bg-base-100 sm: w-3/4 lg:w-1/5 flex flex-col p-4 ">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
           <div className="flex flex-col gap-10 w-full">
             <div className="flex gap-2 w-full">
@@ -160,12 +175,12 @@ export const AppLayout = ({
             {posts.map((post) => (
               <li key={post._id} className="flex justify-between flex-row">
                 <div className="flex-1 overflow-hidden items-center">
-                  <FontAwesomeIcon icon={faFile} />
-                  <Link
-                    href={`/post/${post._id}`}
-                    className="truncate font-bold"
-                  >
-                    {post.topic}
+                  {/* <FontAwesomeIcon icon={faFile} /> */}
+                  <AiOutlineFile />
+                  <Link href={`/post/${post._id}`} className="truncate ">
+                    {post.title
+                      ? removeHtmlTagsAndQuotation(post.title)
+                      : post.topic}
                   </Link>
                 </div>
 
@@ -193,7 +208,8 @@ export const AppLayout = ({
           <ul className="menu w-full">
             <li className="">
               <div>
-                <FontAwesomeIcon icon={faCoins} />
+                {/* <FontAwesomeIcon icon={faCoins} /> */}
+                <GiToken />
                 <div className="">Buy Tokens</div>
                 <Link href="/token-topup">
                   <div
@@ -214,7 +230,8 @@ export const AppLayout = ({
             </li>
             <li>
               <div>
-                <FontAwesomeIcon icon={faCircleHalfStroke} />
+                {/* <FontAwesomeIcon icon={faCircleHalfStroke} /> */}
+                <MdInvertColors />
                 <div className="">Theme</div>
                 {/* Choose Theme */}
                 <label className="swap swap-rotate">
@@ -226,7 +243,7 @@ export const AppLayout = ({
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-4 h-4 swap-off"
+                    className="w-4 h-4 swap-on"
                   >
                     <path
                       strokeLinecap="round"
@@ -241,7 +258,7 @@ export const AppLayout = ({
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-4 h-4 swap-on"
+                    className="w-4 h-4 swap-off"
                   >
                     <path
                       strokeLinecap="round"
@@ -305,10 +322,12 @@ export const AppLayout = ({
                     width={20}
                     className="rounded-full"
                   /> */}
-                  <FontAwesomeIcon icon={faUser} />
+                  {/* <FontAwesomeIcon icon={faUser} /> */}
+                  <BiUser />
                   <div className="">{user.name}</div>
                   <Link href="/api/auth/logout">
-                    <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                    {/* <FontAwesomeIcon icon={faArrowRightFromBracket} /> */}
+                    <FiLogOut />
                   </Link>
                 </div>
               ) : (

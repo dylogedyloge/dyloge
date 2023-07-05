@@ -1,5 +1,5 @@
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import "@/styles/globals.css";
+import "../styles/globals.css";
 import { IntlProvider } from "react-intl";
 import en from "../i18n/en.json";
 import fa from "../i18n/fa.json";

@@ -193,7 +193,7 @@ ${content}`;
         </div>
         <div className="px-10">
           <div
-            className="btn btn-block capitalize"
+            className="btn btn-neutral btn-block capitalize"
             onClick={handleApplyChanges}
           >
             Apply Changes

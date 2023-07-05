@@ -29,9 +29,9 @@
   h4 {
     @apply text-indent my-6;
   }
-  p {
+  /* p {
     @apply text-indent text-justify;
-  }
+  } */
 
   ul {
     list-style-type: disc;

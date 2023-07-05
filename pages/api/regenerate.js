@@ -63,6 +63,8 @@ export default withApiAuthRequired(async function handler(req, res) {
   });
 
   const regenerateContent = regenerateResult.data.choices[0]?.message.content;
+  res.status(200).json({ regenerateContent });
+  // console.log(regenerateContent);
 
   //   const titleResult = await openai.createChatCompletion({
   //     model: "gpt-3.5-turbo",

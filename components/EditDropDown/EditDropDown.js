@@ -32,8 +32,17 @@ const EditDropDown = ({ node, props }) => {
         },
         body: JSON.stringify({ currentText }),
       });
-      console.log(response);
+      if (response.ok) {
+        const data = await response.json();
+        const regenerateContent = data.regenerateContent;
+        // console.log(regenerateContent);
+        setCurrentText(regenerateContent);
+      } else {
+        console.log(e);
+      }
     } catch (e) {
+      console.log("Network Error", e);
+    } finally {
       setRegenerating(false);
     }
   };
@@ -111,7 +120,7 @@ const EditDropDown = ({ node, props }) => {
               {currentText}
             </p>
           )}
-          {!editing && (
+          {!editing && !regenerating && (
             <div className="flex justify-around items-center">
               <a
                 className="btn no-underline capitalize"
@@ -124,13 +133,18 @@ const EditDropDown = ({ node, props }) => {
                 <FontAwesomeIcon icon={faPenNib} />
                 <div className=" hidden sm:block">Edit</div>
               </a>
-              <a
+              {/* <a
                 className="btn no-underline capitalize"
                 onClick={handleRegenerate}
               >
                 <FontAwesomeIcon icon={faArrowRotateLeft} />
                 <div className="hidden sm:block">Rephrase</div>
-              </a>
+              </a> */}
+            </div>
+          )}
+          {!editing && regenerating && (
+            <div className="flex justify-around items-center">
+              <span className="loading loading-dots loading-lg"></span>
             </div>
           )}
         </form>
