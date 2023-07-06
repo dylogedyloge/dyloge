@@ -31,5 +31,5 @@ const contentString = `const DEFAULT_EDITOR_CONTENT = ${JSON.stringify(
   2
 )};\n\nexport default DEFAULT_EDITOR_CONTENT;`;
 
-fs.writeFileSync("default-contents3.jsx", contentString, "utf-8");
+fs.writeFileSync("default-contents.jsx", contentString, "utf-8");
 console.log("file saved");

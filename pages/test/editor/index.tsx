@@ -9,10 +9,11 @@ import { useDebouncedCallback } from "use-debounce";
 import { useCompletion } from "ai/react";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
-import DEFAULT_EDITOR_CONTENT from "./default-contents3";
+import DEFAULT_EDITOR_CONTENT from "./default-contents";
 import { EditorBubbleMenu } from "./components";
 
 export default function Editor() {
+  // const DEFAULT_EDITOR_CONTENT = AiGeneratedBlogToEditableContent(AiGeneratedBlog)
   const [content, setContent] = useLocalStorage(
     "content",
     DEFAULT_EDITOR_CONTENT
