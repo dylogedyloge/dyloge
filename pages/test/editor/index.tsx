@@ -9,15 +9,47 @@ import { useDebouncedCallback } from "use-debounce";
 import { useCompletion } from "ai/react";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
-import DEFAULT_EDITOR_CONTENT from "./default-contents";
 import { EditorBubbleMenu } from "./components";
 
 export default function Editor() {
-  // const DEFAULT_EDITOR_CONTENT = AiGeneratedBlogToEditableContent(AiGeneratedBlog)
-  const [content, setContent] = useLocalStorage(
-    "content",
-    DEFAULT_EDITOR_CONTENT
-  );
+  const [htmlObject, setHtmlObject] = useState(null);
+  const [content, setContent] = useLocalStorage("content", null);
+
+  useEffect(() => {
+    const fetchHtmlObject = async () => {
+      try {
+        const html = `<h1>HEADING 1</h1><h2>Amir Najadsfdsfdsfsdfsdfdsfi</h2><ul><li>list item 1</li><li>list item 2</li></ul>
+       
+`;
+        const response = await fetch("/api/htmlToObject", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ html }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch HTML object");
+        }
+        const data = await response.json();
+
+        setHtmlObject(data.htmlObject);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchHtmlObject();
+  }, []);
+
+  useEffect(() => {
+    if (htmlObject !== null) {
+      setContent(htmlObject);
+    }
+  }, [htmlObject]);
+
+  const DEFAULT_EDITOR_CONTENT = content;
+
   const [saveStatus, setSaveStatus] = useState("Saved");
 
   const [hydrated, setHydrated] = useState(false);
