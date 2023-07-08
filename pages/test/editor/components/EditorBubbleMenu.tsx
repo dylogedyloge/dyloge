@@ -1,12 +1,12 @@
 import { BubbleMenu, BubbleMenuProps } from "@tiptap/react";
 import { FC, useState } from "react";
 import {
-  BoldIcon,
-  ItalicIcon,
-  UnderlineIcon,
-  StrikethroughIcon,
-  CodeIcon,
-} from "lucide-react";
+  BsTypeBold,
+  BsTypeItalic,
+  BsTypeUnderline,
+  BsTypeStrikethrough,
+  BsCodeSlash,
+} from "react-icons/bs";
 
 import { NodeSelector } from "./node-selector";
 import { ColorSelector } from "./color-selector";
@@ -16,7 +16,7 @@ export interface BubbleMenuItem {
   name: string;
   isActive: () => boolean;
   command: () => void;
-  icon: typeof BoldIcon;
+  icon: typeof BsTypeBold;
 }
 
 type EditorBubbleMenuProps = Omit<BubbleMenuProps, "children">;
@@ -27,31 +27,31 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
       name: "bold",
       isActive: () => props.editor.isActive("bold"),
       command: () => props.editor.chain().focus().toggleBold().run(),
-      icon: BoldIcon,
+      icon: BsTypeBold,
     },
     {
       name: "italic",
       isActive: () => props.editor.isActive("italic"),
       command: () => props.editor.chain().focus().toggleItalic().run(),
-      icon: ItalicIcon,
+      icon: BsTypeItalic,
     },
     {
       name: "underline",
       isActive: () => props.editor.isActive("underline"),
       command: () => props.editor.chain().focus().toggleUnderline().run(),
-      icon: UnderlineIcon,
+      icon: BsTypeUnderline,
     },
     {
       name: "strike",
       isActive: () => props.editor.isActive("strike"),
       command: () => props.editor.chain().focus().toggleStrike().run(),
-      icon: StrikethroughIcon,
+      icon: BsTypeStrikethrough,
     },
     {
       name: "code",
       isActive: () => props.editor.isActive("code"),
       command: () => props.editor.chain().focus().toggleCode().run(),
-      icon: CodeIcon,
+      icon: BsCodeSlash,
     },
   ];
 
@@ -79,7 +79,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
   return (
     <BubbleMenu
       {...bubbleMenuProps}
-      className="flex overflow-hidden rounded border border-stone-200 bg-white shadow-xl"
+      className="menu menu-horizontal bg-base-200 rounded-md  "
     >
       <NodeSelector
         editor={props.editor}
@@ -91,11 +91,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
       />
 
       {items.map((item, index) => (
-        <button
-          key={index}
-          onClick={item.command}
-          className="p-2 text-stone-600 hover:bg-stone-100 active:bg-stone-200"
-        >
+        <button key={index} onClick={item.command} className=" p-2 ">
           <item.icon
             className={clsx("h-4 w-4", {
               "text-blue-500": item.isActive(),

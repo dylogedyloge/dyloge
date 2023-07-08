@@ -13,6 +13,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { saveAs } from "file-saver";
 import { FileIcon, defaultStyles } from "react-file-icon";
+import {
+  BsQuote,
+  BsTypeBold,
+  BsTypeItalic,
+  BsTypeUnderline,
+  BsTypeStrikethrough,
+  BsCodeSlash,
+  BsCardImage,
+} from "react-icons/bs";
+import { AiOutlineUnorderedList } from "react-icons/ai";
+import { VscDebugContinueSmall } from "react-icons/vsc";
+import { GoHeading } from "react-icons/go";
 
 export default function Post(props) {
   // console.log("PROPS: ", props);
@@ -23,8 +35,9 @@ export default function Post(props) {
   const contentRef = useRef(null);
   // Apply changes
 
-  const handleApplyChanges = () => {
-    location.reload();
+  const handleGoToEditor = () => {
+    // location.reload();
+    router.push(`/test/editor`);
   };
 
   // Download
@@ -193,10 +206,25 @@ ${content}`;
         </div>
         <div className="px-10">
           <div
-            className="btn btn-neutral btn-block capitalize"
-            onClick={handleApplyChanges}
+            className="btn btn-neutral btn-block capitalize sm:flex sm:justify-between"
+            onClick={handleGoToEditor}
           >
-            Apply Changes
+            <div className="hidden sm:flex sm:gap-1">
+              <BsTypeBold />
+              <BsTypeItalic />
+              <BsTypeUnderline />
+              <BsTypeStrikethrough />
+              <BsQuote />
+            </div>
+
+            <div className="sm:px-10">Editor</div>
+            <div className="hidden sm:flex sm:gap-1">
+              <BsCodeSlash />
+              <BsCardImage />
+              <AiOutlineUnorderedList />
+              <VscDebugContinueSmall />
+              <GoHeading />
+            </div>
           </div>
         </div>
 

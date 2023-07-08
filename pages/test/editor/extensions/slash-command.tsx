@@ -11,26 +11,22 @@ import Suggestion from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
 import { useCompletion } from "ai/react";
 import tippy from "tippy.js";
+import { LuHeading1, LuHeading2, LuHeading3 } from "react-icons/lu";
 import {
-  Heading1,
-  Heading2,
-  Heading3,
-  List,
-  ListOrdered,
-  MessageSquarePlus,
-  Text,
-  TextQuote,
-  Image as ImageIcon,
-  Code,
-  CheckSquare,
-} from "lucide-react";
+  BsCardImage,
+  BsCheck2Square,
+  BsCodeSlash,
+  BsQuote,
+  BsTextParagraph,
+} from "react-icons/bs";
+import { AiOutlineOrderedList, AiOutlineUnorderedList } from "react-icons/ai";
+import { VscDebugContinueSmall } from "react-icons/vsc";
 // import LoadingCircle from "@/ui/icons/loading-circle";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
 // import Magic from "@/ui/icons/magic";
 import { handleImageUpload } from "../../../../lib/editor";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
+import { BiMessageRoundedDetail } from "react-icons/bi";
 
 interface CommandItemProps {
   title: string;
@@ -79,13 +75,13 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Continue writing",
       description: "Use AI to expand your thoughts.",
       searchTerms: ["gpt"],
-      icon: <FontAwesomeIcon icon={faAnglesLeft} />,
+      icon: <VscDebugContinueSmall size={18} />,
       //  <Magic className="w-7 text-black" />
     },
     {
       title: "Send Feedback",
       description: "Let us know how we can improve.",
-      icon: <MessageSquarePlus size={18} />,
+      icon: <BiMessageRoundedDetail size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor.chain().focus().deleteRange(range).run();
         window.open("/feedback", "_blank");
@@ -95,7 +91,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Text",
       description: "Just start typing with plain text.",
       searchTerms: ["p", "paragraph"],
-      icon: <Text size={18} />,
+      icon: <BsTextParagraph size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor
           .chain()
@@ -109,7 +105,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "To-do List",
       description: "Track tasks with a to-do list.",
       searchTerms: ["todo", "task", "list", "check", "checkbox"],
-      icon: <CheckSquare size={18} />,
+      icon: <BsCheck2Square size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor.chain().focus().deleteRange(range).toggleTaskList().run();
       },
@@ -118,7 +114,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Heading 1",
       description: "Big section heading.",
       searchTerms: ["title", "big", "large"],
-      icon: <Heading1 size={18} />,
+      icon: <LuHeading1 size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor
           .chain()
@@ -132,7 +128,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Heading 2",
       description: "Medium section heading.",
       searchTerms: ["subtitle", "medium"],
-      icon: <Heading2 size={18} />,
+      icon: <LuHeading2 size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor
           .chain()
@@ -146,7 +142,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Heading 3",
       description: "Small section heading.",
       searchTerms: ["subtitle", "small"],
-      icon: <Heading3 size={18} />,
+      icon: <LuHeading3 size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor
           .chain()
@@ -160,7 +156,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Bullet List",
       description: "Create a simple bullet list.",
       searchTerms: ["unordered", "point"],
-      icon: <List size={18} />,
+      icon: <AiOutlineUnorderedList size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor.chain().focus().deleteRange(range).toggleBulletList().run();
       },
@@ -169,7 +165,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Numbered List",
       description: "Create a list with numbering.",
       searchTerms: ["ordered"],
-      icon: <ListOrdered size={18} />,
+      icon: <AiOutlineOrderedList size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor.chain().focus().deleteRange(range).toggleOrderedList().run();
       },
@@ -178,7 +174,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Quote",
       description: "Capture a quote.",
       searchTerms: ["blockquote"],
-      icon: <TextQuote size={18} />,
+      icon: <BsQuote size={18} />,
       command: ({ editor, range }: CommandProps) =>
         editor
           .chain()
@@ -192,7 +188,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Code",
       description: "Capture a code snippet.",
       searchTerms: ["codeblock"],
-      icon: <Code size={18} />,
+      icon: <BsCodeSlash size={18} />,
       command: ({ editor, range }: CommandProps) =>
         editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
     },
@@ -200,7 +196,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Image",
       description: "Upload an image from your computer.",
       searchTerms: ["photo", "picture", "media"],
-      icon: <ImageIcon size={18} />,
+      icon: <BsCardImage size={18} />,
       command: ({ editor, range }: CommandProps) => {
         editor.chain().focus().deleteRange(range).run();
         // upload image
@@ -343,18 +339,18 @@ const CommandList = ({
     <div
       id="slash-command"
       ref={commandListContainer}
-      className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto scroll-smooth rounded-md border border-stone-200 bg-white px-1 py-2 shadow-md transition-all"
+      className="z-50 block max-h-[330px] overflow-y-auto menu bg-base-200 rounded-box "
     >
       {items.map((item: CommandItemProps, index: number) => {
         return (
           <button
-            className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-stone-900 hover:bg-stone-100 ${
-              index === selectedIndex ? "bg-stone-100 text-stone-900" : ""
+            className={`flex w-full items-center space-x-2 rounded-md p-2  text-left text-sm hover:bg-base-300 ${
+              index === selectedIndex ? "bg-base-300 text-base-content" : ""
             }`}
             key={index}
             onClick={() => selectItem(index)}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 bg-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md  bg-base-100">
               {item.title === "Continue writing" && isLoading ? (
                 // <LoadingCircle />
                 <span className="loading loading-dots loading-xs"></span>
@@ -364,7 +360,7 @@ const CommandList = ({
             </div>
             <div>
               <p className="font-medium">{item.title}</p>
-              <p className="text-xs text-stone-500">{item.description}</p>
+              <p className="text-xs text-base-content">{item.description}</p>
             </div>
           </button>
         );
