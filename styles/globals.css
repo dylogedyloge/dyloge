@@ -18,20 +18,20 @@
 
 @layer base {
   h1 {
-    @apply text-indent my-6;
+    @apply font-bold my-6;
   }
   h2 {
-    @apply text-indent my-6;
+    @apply font-bold my-5;
   }
   h3 {
-    @apply text-indent my-6;
+    @apply font-bold my-4;
   }
   h4 {
-    @apply text-indent my-6;
+    @apply font-bold my-3;
   }
-  /* p {
-    @apply text-indent text-justify;
-  } */
+  p {
+    @apply text-justify;
+  }
 
   ul {
     list-style-type: disc;

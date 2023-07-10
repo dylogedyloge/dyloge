@@ -26,7 +26,7 @@ export default function NewPost(props) {
       const json = await response.json();
 
       if (json?.postId) {
-        router.push(`/post/${json.postId}`);
+        router.push(`/post/${json.postId}/editor`);
       }
     } catch (e) {
       setGenerating(false);
@@ -74,7 +74,7 @@ export default function NewPost(props) {
             </div>
             <button
               type="submit"
-              className="btn btn-neutral btn-block "
+              className="btn btn-block "
               disabled={!topic.trim() || !keywords.trim()}
             >
               Generate

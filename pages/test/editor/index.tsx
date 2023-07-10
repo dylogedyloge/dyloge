@@ -10,6 +10,7 @@ import { useCompletion } from "ai/react";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
 import { EditorBubbleMenu } from "./components";
+import { BsFillCheckSquareFill, BsFillSquareFill } from "react-icons/bs";
 
 export default function Editor() {
   const [htmlObject, setHtmlObject] = useState(null);
@@ -18,9 +19,7 @@ export default function Editor() {
   useEffect(() => {
     const fetchHtmlObject = async () => {
       try {
-        const html = `<h1>HEADING 1</h1><h2>Amir Najadsfdsfdsfsdfsdfdsfi</h2><ul><li>list item 1</li><li>list item 2</li></ul>
-       
-`;
+        const html = `<h1>HEADING 1</h1><h2>Amir Najsfi</h2><ul><li>list item 1</li><li>list item 2</li></ul>`;
         const response = await fetch("/api/htmlToObject", {
           method: "POST",
           headers: {
@@ -174,7 +173,20 @@ export default function Editor() {
           }}
           className="card min-h-[500px] w-full max-w-screen-lg p-12 px-8 sm:mb-[calc(20vh)] "
         >
-          <div className="absolute right-5 top-5 badge p-4">{saveStatus}</div>
+          <div className="absolute right-5 top-5 w-32">
+            {saveStatus === "Saved" && (
+              <button className="btn btn-ghost pointer-events-none flex justify-between items-center capitalize">
+                <BsFillCheckSquareFill size={18} />
+                <div className="text-xs">{saveStatus}</div>
+              </button>
+            )}
+            {saveStatus !== "Saved" && (
+              <button className="btn btn-ghost pointer-events-none flex justify-between items-center capitalize">
+                <BsFillSquareFill size={18} />
+                <div className="text-xs">{saveStatus}</div>
+              </button>
+            )}
+          </div>
           {editor && <EditorBubbleMenu editor={editor} />}
           <EditorContent editor={editor} />
         </div>

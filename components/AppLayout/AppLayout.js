@@ -69,7 +69,7 @@ export const AppLayout = ({
   // Theme Change
   const [theme, setTheme] = useLocalStorage();
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(theme === "business" ? "corporate" : "business");
   };
   useEffect(() => {
     const body = document.body;
@@ -116,21 +116,22 @@ export const AppLayout = ({
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content ">
           {/* Page content here */}
-          <div className="grid place-items-end"></div>
-          <label
-            htmlFor="my-drawer-2"
-            className="btn drawer-button btn-outline m-4"
-            onClick={toggleDrawer}
-          >
-            <FontAwesomeIcon
-              // icon={faArrowRight}
-              icon={faAnglesRight}
+          {/* <div className="grid place-items-end"></div> */}
+          <div className="">
+            <label
+              htmlFor="my-drawer-2"
+              className="btn drawer-button btn-outline m-4 "
               onClick={toggleDrawer}
-              className="hidden lg:hidden"
-            />
-          </label>
-
-          {children}
+            >
+              <FontAwesomeIcon
+                // icon={faArrowRight}
+                icon={faAnglesRight}
+                onClick={toggleDrawer}
+                className="hidden lg:hidden"
+              />
+            </label>
+          </div>
+          <div>{children}</div>
         </div>
         {/*  */}
 
@@ -177,7 +178,7 @@ export const AppLayout = ({
                 <div className="flex-1 overflow-hidden items-center">
                   {/* <FontAwesomeIcon icon={faFile} /> */}
                   <AiOutlineFile />
-                  <Link href={`/post/${post._id}`} className="truncate ">
+                  <Link href={`/post/${post._id}/editor`} className="truncate ">
                     {post.title
                       ? removeHtmlTagsAndQuotation(post.title)
                       : post.topic}

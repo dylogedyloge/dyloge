@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { PostsProvider } from "../context/postsContext";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import { Toaster } from "sonner";
 
 config.autoAddCss = false;
 
@@ -30,6 +31,7 @@ export default function App({ Component, pageProps }) {
       <PostsProvider>
         <main className={`${isPersian ? "font-sans-fa" : "font-sans-en"} `}>
           <IntlProvider locale={locale} messages={messages[locale]}>
+            <Toaster />
             {getLayout(
               <Component {...pageProps} dir={getDirection(locale)} />,
               pageProps
