@@ -10,9 +10,20 @@ import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
-
+import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import * as Y from "yjs";
+import { HocuspocusProvider } from "@hocuspocus/provider";
 import SlashCommand from "./slash-command";
 import { InputRule } from "@tiptap/core";
+
+const ydoc = new Y.Doc();
+
+const provider = new HocuspocusProvider({
+  url: "ws://127.0.0.1:1234",
+  name: "example-document",
+  document: ydoc,
+});
 
 export const TiptapExtensions = [
   StarterKit.configure({
@@ -71,7 +82,7 @@ export const TiptapExtensions = [
 
             tr.insert(start - 1, this.type.create(attributes)).delete(
               tr.mapping.map(start),
-              tr.mapping.map(end),
+              tr.mapping.map(end)
             );
           },
         }),
@@ -124,5 +135,12 @@ export const TiptapExtensions = [
   Markdown.configure({
     linkify: true,
     transformCopiedText: true,
+  }),
+  Collaboration.configure({
+    document: ydoc,
+  }),
+  CollaborationCursor.configure({
+    provider,
+    user: { name: "John Doe", color: "#ffcc00" },
   }),
 ];

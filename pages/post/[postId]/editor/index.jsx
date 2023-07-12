@@ -23,7 +23,6 @@ import va from "@vercel/analytics";
 import { EditorBubbleMenu } from "./components";
 import { BsFillCheckSquareFill, BsFillSquareFill } from "react-icons/bs";
 import { useRouter } from "next/router";
-
 import { BiSolidErrorCircle } from "react-icons/bi";
 
 export default function Editor(props) {
